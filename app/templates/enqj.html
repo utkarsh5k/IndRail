@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Journey Enquiry</title>
+ 
+    
+   <!--<link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">-->
+ 
+   <!-- <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">-->
+    <link rel="stylesheet" type="text/css" href="../static/css/jbtron.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+    <link href="../static/css/signup.css" type= "text/css" rel="stylesheet">
+    
+  </head>
+ 
+  <body>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="history">History</a></li>
+            <li role="presentation" class = "active"><a href="#">Journey</a></li>
+            <li role="presentation"><a href="enqt">Trains</a></li>
+            <li role="presentation"><a href="dashboard">Dashboard</a></li>
+            <li role="presentation"><a href="booking">Book</a></li>
+            <li role="presentation"><a href="cancel">Cancel</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">IndRail</h3>
+      </div>
+ 
+      <div class="jumbotron">
+        {% if trains %}
+        <p style="text-align: center; font-size: 300%;">Trains for the Journey</p>
+        <hr style="width: 0px;">
+        <table style="width: 100%; font-size: 120%">
+        <tr>
+        <td>Train Name</td>
+        <td>STime</td>
+        <td>ETime</td>
+        <td>Start</td>
+        <td>End</td>
+        </tr>
+          {% for i in range(l) %}
+            <tr>
+            <td>{{ trains[i][1] }}</td>
+            <td>{{ arrv[i] }}</td>
+            <td>{{ deps[i] }}</td>
+            <td>{{ start }}</td>
+            <td>{{ end }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+        {% else %}
+        <h1 style="font-size: 300%;">Enter Journey End-Points</h1>  
+        <form action="/enqj" class="form-signin" method="POST" id="form1">
+        <label for="inputStart" class="sr-only">Boarding at..</label>
+        <input type="name" name="inputStart" id="inputStart" class="form-control" placeholder="Boarding at.." required autofocus>
+        <label for="inputEnd" class="sr-only"></label>
+        <input type="name" name="inputEnd" id="inputEnd" class="form-control" placeholder="Destination" required>
+        <!--{% if err %}
+          <p style="color: red; font-size:110%;">{{ err }}</p>
+        {% endif %}-->
+        <hr style="border-width: 0px;">
+        <button type="submit" form="form1" id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Search Trains</button> 
+        </form>
+        {% endif %}
+      </div>
+     </div>
+  </body>
+</html>

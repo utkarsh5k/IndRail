@@ -1,0 +1,259 @@
+from flask import render_template, flash, redirect, request, session
+from app import app
+from dbconnect import connection
+
+@app.route('/')
+@app.route('/index')
+def index():
+    session.clear()
+    session.clear()
+    return render_template('index.html')
+
+@app.route('/signup')
+def disp():
+    session.clear()
+    return render_template('signup.html')
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    fname = request.form['inputFName']
+    lname = request.form['inputLName']
+    age= request.form['inputAge']
+    mno= request.form['inputMobile']
+    gender= request.form['inputGender']
+    email= request.form['inputEmail']
+    uname= request.form['inputUser']
+    password = request.form['inputPassword']
+    cur, conn = connection()
+    y= cur.execute("SELECT * from Person where Person_id=%s",(uname))
+    if int(y)>0:
+    	err="Error: Username already exists!"
+    	return render_template('signup.html', err=err)
+    x= cur.execute("INSERT into Person(Person_id, Fname, Lname, Age, Mobile_no, email_id, Gender, password) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)", (uname, fname, lname, age, mno, email, gender, password))
+    conn.commit()
+    cur.close()
+    conn.close()
+    str="Registration Successful!"
+    return render_template('index.html', msg=str)
+
+@app.route('/login')
+def screen():
+    print "Session cleared at login page"
+    session.clear()
+    return render_template('login.html')
+
+@app.route('/login', methods=['POST'])
+def login():
+    uname= request.form['inputUser']
+    upass= request.form['inputPassword']
+    session['uid']= uname
+    session['pwd']=upass
+    cur, conn= connection()
+    x= cur.execute("SELECT password, Person_id, fname from Person WHERE Person_id=%s",(uname))
+    if int(x)==0:
+        err="Error: Username does not exist!"
+        return render_template('login.html', err=err)
+    y= cur.fetchone()
+    conn.commit()
+    cur.close()
+    conn.close()
+    if upass==y[0]:
+        return render_template('dashboard.html',name=y[2])
+    else:
+    	err="Error: Incorrect Username/Password!"
+    	return render_template('login.html', err=err)
+
+#enquiry when two end points are given 
+@app.route('/enqj')
+def enq():
+    return render_template('enqj.html')
+@app.route('/enqj', methods=['POST'])
+def results():
+    cur, conn= connection()
+    start=request.form['inputStart']
+    end=request.form['inputEnd']
+    cur.execute("SELECT Train.Tnumber, Name from Train, Platform, Train_route where Platform.Platform_name=%s and Train_route.Tnumber=Train.Tnumber and Train_route.Platform_id=Platform.Platform_id",(start))
+    starts=cur.fetchall()
+    cur.execute("SELECT Train.Tnumber, Name from Train, Platform, Train_route where Platform.Platform_name=%s and Train_route.Tnumber=Train.Tnumber and Train_route.Platform_id=Platform.Platform_id",(end))
+    ends=cur.fetchall()
+    reqd= list(set(starts).intersection(ends))
+    conn.commit()
+    cur.close()
+    conn.close()
+    uid =session.get('uid',None)
+    pwd=session.get('pwd',None)
+    return render_template('enqj.html', trains=reqd)
+    
+@app.route('/enqt')
+def enqt():
+    return render_template('enqt.html')
+
+@app.route('/enqt', methods=['POST'])
+def trains():
+    cur, conn = connection()
+    tname= request.form['inputTname']
+    cur.execute("SELECT Train.Name, Platform.Platform_Name from Train_route, Train, Platform WHERE Train.Name=%s and Train.Tnumber=Train_route.Tnumber and Train_route.Platform_id=Platform.Platform_id ORDER BY Train_route.order_no", (tname))
+    route=cur.fetchall()
+    conn.commit()
+    cur.close()
+    conn.close()
+    return render_template('enqt.html', routes=route)
+
+@app.route('/test')
+def test():
+    return render_template('test.html')
+@app.route('/test', methods=['POST'])
+def checkval():
+    val=request.form['submit']
+    print val
+    return render_template('test.html')
+
+@app.route('/booking')
+def journey():
+    return render_template('booking.html')
+
+@app.route('/booking', methods=['POST'])
+def book():
+    cur, conn = connection()
+    start=request.form['inputStart']
+    end=request.form['inputEnd']
+    seats=int(request.form['inputSeats'])
+    doj=request.form['inputDate']
+    cur.execute("Select Platform_id from Platform where Platform_name=%s", (start))
+    x=cur.fetchone()[0]
+    session['start_pt']=x
+    cur.execute("Select Platform_id from Platform where Platform_name=%s", (end))
+    y=cur.fetchone()[0]
+    session['end_pt']=y
+    session['seats']=seats
+    session['date']=doj
+    cur.execute("SELECT Train.Tnumber, Name from Train, Platform, Train_route where Platform.Platform_name=%s and Train_route.Tnumber=Train.Tnumber and Train_route.Platform_id=Platform.Platform_id",(start))
+    a=cur.fetchall()
+    cur.execute("SELECT Train.Tnumber, Name from Train, Platform, Train_route where Platform.Platform_name=%s and Train_route.Tnumber=Train.Tnumber and Train_route.Platform_id=Platform.Platform_id",(end))
+    b=cur.fetchall()
+    reqd= list(set(a).intersection(b))
+    final=[]
+    for train in reqd:
+        c=cur.execute("SELECT * from Availability where Tnumber=%s and Date_of_Journey=%s", (train[0], doj))
+        if int(c)>0:
+            cur.execute("SELECT order_no from Train_route,Platform WHERE Train_route.Tnumber=%s and Platform.Platform_name=%s and Train_route.Platform_id=Platform.Platform_id", (train[0], start))
+            ostart=cur.fetchone()[0]
+            cur.execute("SELECT order_no from Train_route,Platform WHERE Train_route.Tnumber=%s and Platform.Platform_name=%s and Train_route.Platform_id=Platform.Platform_id", (train[0], end))
+            oend=cur.fetchone()[0]
+            if oend<ostart:
+                oend, ostart = ostart, oend
+            cur.execute("SELECT Seats_Available from Availability,Train_route WHERE Availability.Tnumber=Train_route.Tnumber and Availability.Tnumber=%s and order_no BETWEEN %s and %s", (train[0], ostart, oend))
+            path=cur.fetchall()
+            possible=True
+            for pform in path:  
+                if (pform[0]<seats):
+                    possible=False
+                    break
+            if possible==True:
+                final.append(train)
+        else:
+            cur.execute("SELECT Platform_id from Train_route WHERE Tnumber=%s", (train[0]))
+            ids=cur.fetchall()
+            for pid in ids:
+                cur.execute("INSERT into Availability(Tnumber, Platform_id, Date_of_Journey, Seats_Available) VALUES (%s,%s,%s,500)", (train[0], pid[0], doj))
+            final.append(train)
+    conn.commit()
+    cur.close()
+    conn.close()
+    session['final']=final
+    l=len(final)
+    return render_template('booktrain.html', final=final, length=l)
+
+@app.route('/booktrain')
+def options():
+    return render_template('booktrain.html')
+
+@app.route('/booktrain', methods=['POST'])
+def ticket():
+    final=session.get('final',None)
+    ind=int(request.form['submit'])
+    sid=session.get('start_pt',None)
+    eid=session.get('end_pt',None)
+    uname=session.get('uid',None)
+    date=session.get('date',None)
+    seats=session.get('seats',None)
+    cur, conn= connection()
+    x=cur.execute("SELECT PNR from Ticket ORDER by PNR desc")
+    if int(x)==0:
+        pnr=1738227265
+    else:
+        pnr=cur.fetchone()[0]+1
+    cur.execute("INSERT into Ticket values(%s, %s, %s, %s, %s, %s, 100, %s)", (pnr, uname, final[ind][0], date, sid, eid, seats))
+    cur.execute("SELECT order_no from Train_route where Tnumber=%s and Platform_id=%s",(final[ind][0], sid))
+    ostart=cur.fetchone()[0]
+    cur.execute("SELECT order_no from Train_route where Tnumber=%s and Platform_id=%s",(final[ind][0], eid))
+    oend=cur.fetchone()[0]
+    if oend<ostart:
+        oend,ostart=ostart,oend
+    cur.execute("SELECT Platform_id from Train_route where Tnumber=%s and order_no BETWEEN %s and %s",(final[ind][0],ostart,oend))
+    pforms=cur.fetchall()
+    for pform in pforms:
+        cur.execute("UPDATE Availability set Seats_Available=Seats_Available-%s where Tnumber=%s and Platform_id=%s",(seats,final[ind][0],pform[0]))
+    conn.commit()
+    cur.close()
+    conn.close()
+    session.clear()
+    session['uid']=uname
+    return render_template('dashboard.html')
+
+@app.route('/cancel')
+def look():
+    uid=session.get('uid',None)
+    cur,conn = connection()
+    cur.execute("SELECT * from Ticket where Person_ID=%s",(uid))
+    tickets=cur.fetchall()
+    length=len(tickets)
+    conn.commit()
+    cur.close()
+    conn.close()
+    return render_template('cancel.html', tickets=tickets, length=length)
+
+@app.route('/cancel', methods=['POST'])
+def cancel():
+    uid=session.get('uid',None)
+    cur,conn = connection()
+    cur.execute("SELECT * from Ticket where Person_ID=%s",(uid))
+    tickets=cur.fetchall()
+    ind=int(request.form['submit'])
+#PNR will be the first item in the tuple
+    pnr=tickets[ind][0]
+    sid=tickets[ind][4]
+    lid=tickets[ind][5]
+    doj=tickets[ind][3]
+    tnum=tickets[ind][2]
+    cur,conn = connection()
+    seats=tickets[ind][7]
+    cur.execute("SELECT order_no from Train_route WHERE Tnumber=%s and Platform_id=%s", (tnum, sid))
+    ostart=cur.fetchone()[0]
+    cur.execute("SELECT order_no from Train_route WHERE Tnumber=%s and Platform_id=%s", (tnum, lid))
+    oend=cur.fetchone()[0]
+    if oend<ostart:
+        oend, ostart = ostart, oend
+    cur.execute("SELECT Platform_id from Train_route where Tnumber=%s and order_no BETWEEN %s and %s",(tnum,ostart,oend))
+    pforms=cur.fetchall()
+    for pform in pforms:
+        cur.execute("UPDATE Availability set Seats_Available=Seats_Available+%s where Tnumber=%s and Platform_id=%s",(seats,tnum,pform[0]))
+    cur.execute("DELETE from Ticket where PNR=%s",(pnr))
+    conn.commit()
+    cur.close()
+    conn.close()
+    msg="Cancellation Successful!"
+    return render_template('dashboard.html', msg=msg)
+#Make a route for dashboard, 
+
+@app.route('/history')
+def history():
+    uid=session.get('uid',None)
+    cur,conn = connection()
+    cur.execute("SELECT * from Ticket where Person_ID=%s",(uid))
+    tickets=cur.fetchall()
+    conn.commit()
+    cur.close()
+    conn.close()
+    return render_template('history.html', tickets=tickets)
+

@@ -1,0 +1,16 @@
+h1{
+	font-size: 18px;
+	text-align: left;
+	color: rgba(255,255,255, .8);
+}
+body{
+	background-color: #272125;
+}
+.space{
+		height: 175px;
+}
+.abc{
+	color: rgba(255,255,255, .8);
+	text-align: center;
+	font-size: 150%;	
+}

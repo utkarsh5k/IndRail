@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>IndRail Registration</title>
+ 
+    
+   <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+ 
+   <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+    <link href="../static/css/test.css" rel="stylesheet">
+    
+  </head>
+ 
+  <body>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" ><a href="index">History</a></li>
+            <li role="presentation" class = "active"><a href="enqj">Journey</a></li>
+            <li role="presentation"><a href="signup">Trains</a></li>
+            <li role="presentation" ><a href="dashboard">Dashboard</a></li>
+            <li role="presentation"><a href="#">Book</a></li>
+            <li role="presentation"><a href="signup">Cancel</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">IndRail</h3>
+      </div>
+ 
+        <div class="jumbotron">
+        <h1 style="font-size: 300%; text-align: center;">Book your Tickets</h1>  
+        
+        <form action="/test" class="form-signin" method="POST" id="form1">
+        {% for i in range(5) %}
+        <p>Some Random Data <button style="font-size:60%; padding: 7px 12px;" type="submit" form="form1" name="submit" class="btn btn-sm btn-primary" value="{{ i }}">Book Ticket</button></p>
+        {% endfor %} 
+        </form>
+      </div>
+     </div>
+  </body>
+</html>

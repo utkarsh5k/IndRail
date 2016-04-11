@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Cancel Tickets</title>
+ 
+    
+   <link rel="stylesheet" type="text/css" href="../static/css/jbtron.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+    <link href="../static/css/signup.css" type= "text/css" rel="stylesheet">
+    
+  </head>
+ 
+  <body>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="history">History</a></li>
+            <li role="presentation"><a href="enqj">Journey</a></li>
+            <li role="presentation"><a href="enqt">Trains</a></li>
+            <li role="presentation" ><a href="dashboard">Dashboard</a></li>
+            <li role="presentation"><a href="booking">Book</a></li>
+            <li role="presentation" class = "active"><a href="#">Cancel</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">IndRail</h3>
+      </div>
+    </div>
+      <div>
+      <div class="jumbotron">
+        <h1 style="font-size: 300%;">Cancel Tickets</h1>
+       <hr style="width: 0px;">
+       <table style="width: 100%; text-align: left; font-size: 120%; margin-left: 10px;"> 
+       <tr>
+        <td>PNR</td>
+        <td>Train</td>
+        <td>DoJ</td>
+        <td>Start</td>
+        <td>End</td>
+        <td>Cost</td>
+        <td>Seats</td> 
+        </tr>
+        <form action="/cancel" class="form-signin" method="POST" id="form1">
+        {% for i in range(length) %}
+        <tr>
+        <td>{{ tickets[i][0] }}</td>
+        <td>{{ tickets[i][2] }}</td>
+        <td>{{ tickets[i][3] }}</td>
+        <td>{{ startp[i] }}</td>
+        <td>{{ endp[i] }}</td>
+        <td>{{ tickets[i][6] }}</td>
+        <td>{{ tickets[i][7] }}</td> 
+        <td><button style="font-size:60%; padding: 7px 12px;" type="submit" form="form1" name="submit" class="btn btn-sm btn-primary" value="{{ i }}">Cancel</button></td>
+        </tr>
+       {% endfor %}
+      </form>
+      </table>
+      
+      </div>
+     </div>
+  </body>
+</html>

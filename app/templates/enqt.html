@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Train Enquiry</title>
+ 
+    
+   <link rel="stylesheet" type="text/css" href="../static/css/jbtron.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+    <link href="../static/css/signup.css" type= "text/css" rel="stylesheet">
+    
+  </head>
+ 
+  <body>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="history">History</a></li>
+            <li role="presentation"><a href="enqj">Journey</a></li>
+            <li role="presentation" class = "active"><a href="#">Trains</a></li>
+            <li role="presentation"><a href="dashboard">Dashboard</a></li>
+            <li role="presentation"><a href="booking">Book</a></li>
+            <li role="presentation"><a href="cancel">Cancel</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">IndRail</h3>
+      </div>
+    
+      <div class="jumbotron">
+        {% if routes %}
+    
+        <p style="font-size: 150%;">Schedule of {{ routes[0][0] }}</p>
+        <table style="width: 100%;">
+          <tr>
+          <td style="font-size: 120%;">Platform Name</td>
+          <td style="font-size: 120%;">Arrival Time</td>
+          <td style="font-size: 120%;">Departure Time</td>
+          {% for route in routes %}
+            <tr>
+            <td style="font-size: 110%;">{{ route[1] }}</td>
+            <td style="font-size: 110%;">{{ route[2] }}</td>
+            <td style="font-size: 110%;">{{ route[3] }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+        {% else %}
+        <h1 style="font-size: 300%;">Train Name</h1>  
+        <form action="/enqt" class="form-signin" method="POST" id="form1">
+        <input type="name" name="inputTname" id="inputTname" class="form-control" placeholder="Train Name" required autofocus>
+        <!--{% if err %}
+          <p style="color: red; font-size:110%;">{{ err }}</p>
+        {% endif %}-->
+        <hr style="border-width: 0px;">
+        <button type="submit" form="form1" id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Search Trains</button> 
+        </form>
+        {% endif %}
+      </div>
+     </div>
+  </body>
+</html>

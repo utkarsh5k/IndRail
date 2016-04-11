@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>IndRail Registration</title>
+ 
+    
+   <link rel="stylesheet" type="text/css" href="../static/css/jbtron.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+    <link href="../static/css/signup.css" type= "text/css" rel="stylesheet">
+    
+  </head>
+ 
+  <body>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" ><a href="index">Home</a></li>
+            <li role="presentation" class = "active"><a href="#">Sign In</a></li>
+            <li role="presentation"><a href="signup">Sign Up</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">IndRail</h3>
+      </div>
+ 
+      <div class="jumbotron">
+        <h1>IndRail Sign-In</h1>  
+        <form action="/login" class="form-signin" method="POST" id="form1">
+        <label for="inputEmail" class="sr-only">Username</label>
+        <input type="name" name="inputUser" id="inputUser" class="form-control" placeholder="Username" required autofocus>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" name="inputPassword" id="inputPassword" class="form-control" placeholder="Password" required>
+        {% if err %}
+          <p style="color: red; font-size:110%;">{{ err }}</p>
+        {% endif %}
+        <button type="submit" form="form1" id="btnSignUp" class="btn btn-lg btn-primary btn-block" type="button">Sign In</button> 
+        
+      </form>
+      </div>
+ 
+ 
+    </div>
+  </body>
+</html>

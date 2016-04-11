@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>IndRail Registration</title>
+ 
+    
+  <link rel="stylesheet" type="text/css" href="../static/css/jbtron.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+    <link href="../static/css/signup.css" type= "text/css" rel="stylesheet">
+    
+  </head>
+ 
+  <body>
+ 
+    <div class="container">
+      <div class="header">
+        <nav>
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class = "active"><a href="#">History</a></li>
+            <li role="presentation"><a href="enqj">Journey</a></li>
+            <li role="presentation"><a href="enqt">Trains</a></li>
+            <li role="presentation" ><a href="dashboard">Dashboard</a></li>
+            <li role="presentation"><a href="booking">Book</a></li>
+            <li role="presentation"><a href="cancel">Cancel</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">IndRail</h3>
+      </div>
+    </div>
+    <div> 
+      <div class="jumbotron">
+        <h1 style="font-size: 300%;">Booked Tickets</h1>
+       <hr style="width: 0px;">
+       <table style="width: 100%; text-align: left; font-size: 120%; margin-left: 10px;"> 
+       <tr>
+        <td>PNR</td>
+        <td>Train Name</td>
+        <td>DoJ</td>
+        <td>STime</td>
+        <td>ETime</td>
+        <td>Start</td>
+        <td>End</td>
+        <td>Seats</td>
+        <td>Cost</td> 
+        </tr>
+       {% for i in range(l) %}
+        <tr>
+        <td>{{ tickets[i][0] }}</td>
+        <td>{{ tickets[i][1] }}</td>
+        <td>{{ tickets[i][2] }}</td>
+        <td>{{ arrv[i][0] }}</td>
+        <td>{{ deps[i][0] }}</td>
+        <td>{{ sp[i] }}</td>
+        <td>{{ ep[i] }}</td>
+        <td>{{ tickets[i][5] }}</td>
+        <td>{{ tickets[i][6] }}</td> 
+        </tr>
+       {% endfor %}
+      </div>
+     </div>
+  </body>
+</html>
