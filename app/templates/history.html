@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>IndRail Registration</title>
- 
-    
+    <title>History</title>
+
+
   <link rel="stylesheet" type="text/css" href="../static/css/jbtron.css">
     <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
     <link href="../static/css/signup.css" type= "text/css" rel="stylesheet">
-    
+
   </head>
- 
+
   <body>
- 
+
     <div class="container">
       <div class="header">
         <nav>
@@ -27,11 +27,12 @@
         <h3 class="text-muted">IndRail</h3>
       </div>
     </div>
-    <div> 
+    <div>
       <div class="jumbotron">
+        {% if l>0 %}
         <h1 style="font-size: 300%;">Booked Tickets</h1>
        <hr style="width: 0px;">
-       <table style="width: 100%; text-align: left; font-size: 120%; margin-left: 10px;"> 
+       <table style="width: 100%; text-align: left; font-size: 120%; margin-left: 10px;">
        <tr>
         <td>PNR</td>
         <td>Train Name</td>
@@ -41,7 +42,7 @@
         <td>Start</td>
         <td>End</td>
         <td>Seats</td>
-        <td>Cost</td> 
+        <td>Cost</td>
         </tr>
        {% for i in range(l) %}
         <tr>
@@ -53,9 +54,12 @@
         <td>{{ sp[i] }}</td>
         <td>{{ ep[i] }}</td>
         <td>{{ tickets[i][5] }}</td>
-        <td>{{ tickets[i][6] }}</td> 
+        <td>{{ tickets[i][6] }}</td>
         </tr>
        {% endfor %}
+       {% else %}
+       <h1 style="font-size: 200%;">No tickets booked yet!</h1>
+       {% endif %}
       </div>
      </div>
   </body>

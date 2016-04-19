@@ -2,16 +2,16 @@
 <html lang="en">
   <head>
     <title>Cancel Tickets</title>
- 
-    
+
+
    <link rel="stylesheet" type="text/css" href="../static/css/jbtron.css">
     <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
     <link href="../static/css/signup.css" type= "text/css" rel="stylesheet">
-    
+
   </head>
- 
+
   <body>
- 
+
     <div class="container">
       <div class="header">
         <nav>
@@ -29,9 +29,10 @@
     </div>
       <div>
       <div class="jumbotron">
+        {% if length>0 %}
         <h1 style="font-size: 300%;">Cancel Tickets</h1>
        <hr style="width: 0px;">
-       <table style="width: 100%; text-align: left; font-size: 120%; margin-left: 10px;"> 
+       <table style="width: 100%; text-align: left; font-size: 120%; margin-left: 10px;">
        <tr>
         <td>PNR</td>
         <td>Train</td>
@@ -39,7 +40,7 @@
         <td>Start</td>
         <td>End</td>
         <td>Cost</td>
-        <td>Seats</td> 
+        <td>Seats</td>
         </tr>
         <form action="/cancel" class="form-signin" method="POST" id="form1">
         {% for i in range(length) %}
@@ -50,13 +51,15 @@
         <td>{{ startp[i] }}</td>
         <td>{{ endp[i] }}</td>
         <td>{{ tickets[i][6] }}</td>
-        <td>{{ tickets[i][7] }}</td> 
+        <td>{{ tickets[i][7] }}</td>
         <td><button style="font-size:60%; padding: 7px 12px;" type="submit" form="form1" name="submit" class="btn btn-sm btn-primary" value="{{ i }}">Cancel</button></td>
         </tr>
        {% endfor %}
       </form>
       </table>
-      
+      {% else %}
+     <h1 style="font-size: 200%;">No tickets booked yet!</h1>
+     {% endif %}
       </div>
      </div>
   </body>
