@@ -71,7 +71,7 @@ def dash():
 		return render_template('dashboard.html', name=uname)
 	else:
 		return render_template('login.html')
-#enquiry when two end points are given 
+#enquiry when two end points are given
 @app.route('/enqj')
 def enq():
 	if session.get('uid'):
@@ -93,7 +93,7 @@ def results():
     for train in reqd:
     	cur.execute("SELECT exp_arrival from Train_route,Platform where Train_route.Platform_id=Platform.Platform_id and Tnumber=%s and Platform_name=%s",(train[0],start))
         ar=cur.fetchone()
-        arrv.append(ar[0])		
+        arrv.append(ar[0])
         cur.execute("SELECT exp_arrival from Train_route,Platform where Train_route.Platform_id=Platform.Platform_id and Tnumber=%s and Platform_name=%s",(train[0],end))
         dp=cur.fetchone()
         deps.append(dp[0])
@@ -104,7 +104,7 @@ def results():
     uid =session.get('uid',None)
     pwd=session.get('pwd',None)
     return render_template('enqj.html', trains=reqd, start=start, end=end, deps=deps, arrv=arrv, l=length)
-    
+
 @app.route('/enqt')
 def enqt():
 	if session.get('uid'):
@@ -175,7 +175,7 @@ def book():
             cur.execute("SELECT Seats_Available from Availability,Train_route WHERE Availability.Tnumber=Train_route.Tnumber and Availability.Tnumber=%s and order_no BETWEEN %s and %s", (train[0], ostart, oend))
             path=cur.fetchall()
             possible=True
-            for pform in path:  
+            for pform in path:
                 if (pform[0]<seats):
                     possible=False
                     break
@@ -313,7 +313,7 @@ def cancel():
     conn.close()
     msg="Cancellation Done!"
     return render_template('dashboard.html', msg=msg, name=session.get('user_name',None))
-#Make a route for dashboard, 
+#Make a route for dashboard,
 
 @app.route('/history')
 def history():
@@ -346,3 +346,4 @@ def history():
     	return render_template('history.html', tickets=tickets, sp=sp, ep=ep, l=length, deps=deps, arrv=arrv)
     else:
     	return render_template('login.html')
+
