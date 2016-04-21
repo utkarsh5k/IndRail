@@ -38,7 +38,6 @@ def signup():
 
 @app.route('/login')
 def screen():
-    print "Session cleared at login page"
     session.clear()
     return render_template('login.html')
 
@@ -313,7 +312,7 @@ def cancel():
     conn.close()
     msg="Cancellation Done!"
     return render_template('dashboard.html', msg=msg, name=session.get('user_name',None))
-#Make a route for dashboard,
+
 
 @app.route('/history')
 def history():
